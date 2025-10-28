@@ -22,3 +22,21 @@ def encryptage(valeur):
                                                                                                                                                      
 if __name__ == "__main__":
   app.run(debug=True)
+@app.route('/decrypt/<string:token>')
+def decryptage(token):
+    """
+    Inverse de la route encrypt.
+    URL attendue : /decrypt/<le_token_recu>
+    Retourne la valeur décryptée ou un message d'erreur si la clé/token sont invalides.
+    """
+    try:
+        token_bytes = token.encode()            # token (str) -> bytes
+        plaintext_bytes = f.decrypt(token_bytes)  # déchiffre (lève InvalidToken si échec)
+        return f"Valeur decryptée : {plaintext_bytes.decode()}"
+    except InvalidToken:
+        return "Erreur : token invalide ou clé incorrecte.", 400
+    except Exception as e:
+        return f"Erreur serveur lors du décryptage : {str(e)}", 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
